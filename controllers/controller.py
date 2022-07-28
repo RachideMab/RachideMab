@@ -1,11 +1,12 @@
 from views.view import View
 from datetime import datetime
-from tinydb import TinyDB     # pip install tinydb
+from tinydb import TinyDB
 from model.match import Match
 from model.player import Player
 from model.round import Round
 from model.tournament import Tournament
 import random
+
 
 class Controller:
 
@@ -41,9 +42,8 @@ class Controller:
         player['birth_date'] = birth_date
         gender = input("Please enter player's gender (M/F): ").upper()
         player['gender'] = gender
-        ranking = int(input(
-            "Please enter player's ranking (it must be a positive integer >= 1): "
-        ))
+        ranking = int(input("Please enter player's ranking"
+                            "(it must be a positive integer >= 1): "))
         player['ranking'] = ranking
 
         with TinyDB('database.json') as db:
@@ -53,10 +53,9 @@ class Controller:
         # using view to display successfull registration
         View.player_successfully_saved(player)
 
-
     def get_all_players(self):
         """Getting all players infos from the database.
-        returning a list of all records. 
+        returning a list of all records.
         """
         with TinyDB('database.json') as db:
             players_table = db.table('players')
@@ -136,8 +135,8 @@ class Controller:
 
         return updated_players_list
 
-    def launch_round(self, players_list, players_ids_pairs, tournament, 
-                    round_name):
+    def launch_round(self, players_list, players_ids_pairs, tournament,
+                     round_name):
         # Associate a match to every pair
         matchs_list = []
         for pair in players_ids_pairs:
@@ -152,7 +151,8 @@ class Controller:
 
         round_over = False
         while not round_over:
-            choice = input("Wait until round is over, then enter (end): ").lower()
+            choice = input("Wait until round is over,"
+                           "then enter (end): ").lower()
             if choice == 'end':
                 round_over = True
                 round.end_date = datetime.today()
@@ -220,7 +220,7 @@ class Controller:
                     add_player = False
                 View.required_players_to_add(players)
         else:
-            add_more_player = input("Do you whish to add more players ?" 
+            add_more_player = input("Do you whish to add more players ?"
                                     "select (Y/N): ").upper()
 
             if add_more_player == 'N':
@@ -231,8 +231,9 @@ class Controller:
                     # Choosing 8 players
                     players_list = random.sample(players_list, k=8)
             else:
-                number_of_players = int(input("How many players do you wish" 
-                "to add ? Enter an integer number (1, 2, 3, ..., 9): "))
+                number_of_players = int(input("How many players do you wish"
+                                              "to add ? Enter an integer"
+                                              "number (1, 2, 3, ..., 9): "))
 
                 for n in range(number_of_players):
                     # Adding player into database
@@ -258,9 +259,10 @@ class Controller:
                 players_ids_pairs = self.generate_pair_1st_time(
                     tournament.player_ids_list)
             else:
-                players_ids_pairs = self.generate_pair(tournament.player_ids_list)
+                players_ids_pairs = self.generate_pair(
+                                                    tournament.player_ids_list)
 
-            players_list = self.launch_round(players_list, players_ids_pairs, 
-                                tournament, rounds[n])
+            players_list = self.launch_round(players_list, players_ids_pairs,
+                                             tournament, rounds[n])
 
-        View.display_winner(players_list, tournament)    
+        View.display_winner(players_list, tournament)
