@@ -1,17 +1,20 @@
 from tinydb import TinyDB
 
+
 class Player:
     """
-This class defines the player properties. 
+    This class defines the player properties.
     """
 
-    def __init__(self,
-                 id: int, 
-                 last_name: str, 
-                 first_name: str, 
-                 birth_date: str, 
-                 gender: str, 
-                 ranking: int) -> None:
+    def __init__(
+        self,
+        id: int,
+        last_name: str,
+        first_name: str,
+        birth_date: str,
+        gender: str,
+        ranking: int,
+    ) -> None:
         self.id = id
         self.last_name = last_name
         self.first_name = first_name
@@ -28,11 +31,11 @@ This class defines the player properties.
 
     def serialize_player(self):
         return {
-            'last_name': self.last_name,
-            'first_name': self.first_name,
-            'birth_date': self.birth_date,
-            'gender': self.gender,
-            'ranking': self.ranking
+            "last_name": self.last_name,
+            "first_name": self.first_name,
+            "birth_date": self.birth_date,
+            "gender": self.gender,
+            "ranking": self.ranking,
         }
 
     @classmethod
@@ -49,19 +52,20 @@ This class defines the player properties.
         players_list = []
 
         # Opening a connection to the database as db
-        with TinyDB('database.json') as db:
-            # create (if 1st time) or connect (if already exists) to players table
-            players_table = db.table('players')
+        with TinyDB("database.json") as db:
+            # create (if 1st time) or connect (if already exists)
+            # to players table
+            players_table = db.table("players")
             # get all records of players table
             players_infos = players_table.all()
             for player_infos in players_infos:
                 player = cls(
                     id=player_infos.doc_id,
-                    last_name=player_infos['last_name'],
-                    first_name=player_infos['first_name'],
-                    birth_date=player_infos['birth_date'],
-                    gender=player_infos['gender'],
-                    ranking=player_infos['ranking']
+                    last_name=player_infos["last_name"],
+                    first_name=player_infos["first_name"],
+                    birth_date=player_infos["birth_date"],
+                    gender=player_infos["gender"],
+                    ranking=player_infos["ranking"],
                 )
                 players_list.append(player)
 

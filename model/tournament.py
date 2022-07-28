@@ -1,14 +1,10 @@
-from datetime import datetime, date
-from tinydb import TinyDB
+from datetime import date
 
 
-class Tournament():
-    
-    def __init__(self,
-                 name: str,
-                 location: str,
-                 time_control: str,
-                 description: str) -> None:
+class Tournament:
+    def __init__(
+        self, name: str, location: str, time_control: str, description: str
+    ) -> None:
         self.name = name
         self.location = location
         self.tournament_date = date.today()
