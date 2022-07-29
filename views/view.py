@@ -1,12 +1,11 @@
 # The view is what the users see
 # for a web application the view represents the Html files
 # for a desktop application the view represents the code that generate a GUI
-# in this specific case users will use the terminal 
-
+# in this specific case users will use the terminal
 from itertools import groupby
 
+
 class View:
-    
     def welcome(players):
         nbr_of_players = len(players)
 
@@ -53,9 +52,8 @@ class View:
             group_by_rank = sorted(list(group), key=lambda x: x.ranking)
             for item in group_by_rank:
                 players_list.append(item)
-        
         players = players_list
-        output = "\nList of player ordered by score first then by rank for" 
+        output = "\nList of player ordered by score first then by rank for"
         output += "the tournament: "
         output += f"{tournament.name}\n"
         print(output)
@@ -74,7 +72,8 @@ class View:
         print(round)
 
     def enter_round_result(round):
-        print(f"\nEnter the result for every single match in: {round.round_name}\n")
+        print(f"\nEnter the result for every single match in:"
+              f"{round.round_name}\n")
         print("- 1-0 if the 1st player won")
         print("- 0-0 if nobody won")
         print("- 0-1 if the 2nd player won\n")
