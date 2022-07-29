@@ -1,7 +1,6 @@
-
 from controllers.controller import Controller
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     game_over = False
 
     while not game_over:
@@ -10,9 +9,9 @@ if __name__ == '__main__':
         # Start the game
         Controller().start_tournament(tournament_name)
         # Ask to continue or not
-        new_game = input("Do you want to start a new tournament ?"
-                            "select (Y/N): ").upper()
-
-        if new_game == 'N':
+        new_game = input(
+            "Do you want to start a new tournament ?" "select (Y/N): "
+        ).upper()
+        if new_game == "N":
             print("Thank you, bye!")
             game_over = True
