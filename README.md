@@ -8,5 +8,6 @@ To generate the flake8 file, these commands should be used:
     - pip install flake8
     - flake8 --format=html --htmldir=flake-report .\views\ .\controllers\ .\model\ 
 
- The requirements file gives the versions of libraries used.    
+ The requirements file gives the versions of libraries used.
+ With pip you can install librairies by using this command pip install requirements.txt.    
 
