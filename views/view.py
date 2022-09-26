@@ -8,6 +8,8 @@ from itertools import groupby
 class View:
     def welcome(players):
         nbr_of_players = len(players)
+        players_by_name = sorted(players, key=lambda x: x.first_name)
+        players_by_rank = sorted(players, key=lambda x: x.ranking)
 
         print("\nWelcome to Swiss System Tournament.")
 
@@ -18,6 +20,16 @@ class View:
 
         print(f"\nThere are {nbr_of_players} players in the database")
 
+        print("\nList of all players in the database ordered by name: ")
+
+        for player in players_by_name:
+            print(player)
+
+        print("\nList of all players in the database ordered by ranking\n: ")
+
+        for player in players_by_rank:
+            print(player)
+
     def player_successfully_saved(player):
         output = f"\n{player['first_name']} {player['last_name']} "
         output += "has been saved successfully."
@@ -26,6 +38,19 @@ class View:
     def required_players_to_add(players):
         nbr_of_players = len(players)
         print(f"\n{8 - nbr_of_players} more players to add.")
+
+    def display_players_by_name(players, tournament):
+        # sort players by their name
+        players = sorted(players, key=lambda x: x.first_name)
+
+        output = "\nList of player ordered by name for the tournament: "
+        output += f"{tournament.name}\n"
+        print(output)
+
+        for player in players:
+            print(player)
+
+        return players
 
     def display_players_by_rank(players, tournament):
         # sort players by their ranking

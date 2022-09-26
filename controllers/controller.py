@@ -9,7 +9,6 @@ import random
 
 
 class Controller:
-
     def format_birthdate(self, birthdate):
         """
         This function will format a date like this: '2022-03-10' -> '2022-3-10'
@@ -53,6 +52,21 @@ class Controller:
         # using view to display successfull registration
         View.player_successfully_saved(player)
 
+    def add_tournament_into_db(self, tournament_dict):
+        with TinyDB('database.json') as db:
+            tournaments_table = db.table('tournaments')
+            # inserting player infos into the database
+            tournaments_table.insert(tournament_dict)
+
+    def list_of_tournament(self):
+        with TinyDB('database.json') as db:
+            tournaments_table = db.table('tournaments')
+            # list of tournanment
+            for i in range(len(tournaments_table)):
+                print(tournaments_table.get(doc_id=i+1)['name'])
+                for round in tournaments_table.get(doc_id=i+1)['rounds']:
+                    print(f"\t{round}")
+
     def get_all_players(self):
         """Getting all players infos from the database.
         returning a list of all records.
@@ -60,7 +74,6 @@ class Controller:
         with TinyDB('database.json') as db:
             players_table = db.table('players')
             players = players_table.all()
-
         return players
 
     def generate_pair_1st_time(self, ids_list):
@@ -135,6 +148,20 @@ class Controller:
 
         return updated_players_list
 
+    def update_rank_in_db(self):
+        """Getting all players infos from the database.
+        update ranking for all records.
+        """
+        with TinyDB('database.json') as db:
+            players_table = db.table('players')
+
+            for n in range(len(players_table)):
+                last_name = players_table.get(doc_id=n+1)['last_name']
+                first_name = players_table.get(doc_id=n+1)['first_name']
+                name = first_name + ' ' + last_name
+                rank = int(input(f'Enter new ranking for {name}: '))
+                players_table.update({'ranking': rank}, doc_ids=[n+1])
+
     def launch_round(self, players_list, players_ids_pairs, tournament,
                      round_name):
         # Associate a match to every pair
@@ -183,7 +210,7 @@ class Controller:
         players_ranking = View.display_players_by_score_and_rank(
             updated_players_list, tournament)
 
-        return players_ranking
+        return players_ranking, str(round)
 
     def start_tournament(self, tournament_name):
         """
@@ -194,6 +221,12 @@ class Controller:
             - Entering the result when first round is over
             - repeating step 3 and step 4 until the tournament is over.
         """
+
+        # Tournament object to store in the database
+        tournament_dict = {}
+        tournament_dict['name'] = tournament_name
+        tournament_dict['rounds'] = []
+
         # Step 1: Create a tournament
         tournament = Tournament(
             name=tournament_name,
@@ -205,11 +238,9 @@ class Controller:
         rounds = ['Round1', 'Round2', 'Round3', 'Round4']
 
         # Step 2: Add 8 players
-
+        View.welcome(Player.get_all_players_from_db())
         # Getting players infos from database
         players = self.get_all_players()
-        View.welcome(players)
-
         if len(players) < 8:
             add_player = True
             while add_player:
@@ -220,6 +251,7 @@ class Controller:
                     add_player = False
                 View.required_players_to_add(players)
         else:
+            print("\n")
             add_more_player = input("Do you whish to add more players ?"
                                     "select (Y/N): ").upper()
 
@@ -245,10 +277,13 @@ class Controller:
                 players_list = random.sample(players_list, k=8)
 
         # Displaying the list of players
+        players_list = View.display_players_by_name(players_list, tournament)
+
+        # Displaying the list of players
         players_list = View.display_players_by_rank(players_list, tournament)
 
         for n in range(len(rounds)):
-            pass
+            # pass
 
             # Finding the list of player Ids
             tournament.player_ids_list = [player.id for player in players_list]
@@ -262,7 +297,18 @@ class Controller:
                 players_ids_pairs = self.generate_pair(
                                                     tournament.player_ids_list)
 
-            players_list = self.launch_round(players_list, players_ids_pairs,
-                                             tournament, rounds[n])
+            players_list, round_str = self.launch_round(players_list,
+                                                        players_ids_pairs,
+                                                        tournament,
+                                                        rounds[n])
+            tournament_dict['rounds'].append(round_str)
+
+        self.add_tournament_into_db(tournament_dict)
 
         View.display_winner(players_list, tournament)
+
+        print("\nUpdating all player's ranking in the database:\n")
+        self.update_rank_in_db()
+
+        print("\nList of tournament:\n")
+        self.list_of_tournament()
