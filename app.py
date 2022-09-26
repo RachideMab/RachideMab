@@ -9,6 +9,7 @@ if __name__ == "__main__":
         # Start the game
         Controller().start_tournament(tournament_name)
         # Ask to continue or not
+        print("\n")
         new_game = input(
             "Do you want to start a new tournament ?" "select (Y/N): "
         ).upper()
